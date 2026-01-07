@@ -1,7 +1,7 @@
 -- Create application database
-CREATE DATABASE application_db;
+CREATE DATABASE "${POSTGRES_DB:-application_db}";
 
 
 -- Create application user and grant privileges
-CREATE USER "sillians" WITH ENCRYPTED PASSWORD 'mlflow_password_123';
-GRANT ALL PRIVILEGES ON DATABASE application_db TO "sillians";
+CREATE USER "${POSTGRES_USER:-application_user}" WITH ENCRYPTED PASSWORD '${POSTGRES_PASSWORD:-application_password}';
+GRANT ALL PRIVILEGES ON DATABASE "${POSTGRES_DB:-application_db}" TO "${POSTGRES_USER:-application_user}";

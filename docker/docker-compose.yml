@@ -14,8 +14,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
     healthcheck:
       # Use the variable for user and internal port 5432
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d application_db"]
@@ -40,8 +40,8 @@ services:
     command: server /data --console-address ":${MINIO_INTERNAL_CONSOLE_PORT}" --address ":${MINIO_INTERNAL_PORT}"
     volumes:
       - minio_data:/data
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:${MINIO_INTERNAL_PORT}/minio/health/live" ]
       interval: 20s
@@ -55,8 +55,8 @@ services:
     depends_on:
       minio:
         condition: service_healthy
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
     volumes:
       - ./minio/create-bucket.sh:/create-bucket.sh
     entrypoint: /bin/sh
@@ -78,8 +78,8 @@ services:
     restart: always
     ports:
       - "5001:5000" # Host 5001 -> Container 5000
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
     environment:
       - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
       - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
@@ -118,8 +118,8 @@ services:
       - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-    # networks:
-    #   - app-network
+    networks:
+      - app-network
     depends_on:
       - postgres
 
@@ -131,7 +131,7 @@ volumes:
   minio_data:
   pgadmin_data:
 
-# # network definitions
-# networks:
-#   app-network:
-#     driver: bridge
+# network definitions
+networks:
+  app-network:
+    driver: bridge
